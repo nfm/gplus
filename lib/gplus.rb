@@ -1,5 +1,4 @@
-require "gplus/version"
+require 'oauth2'
 
-module Gplus
-  # Your code goes here...
-end
+require "gplus/version"
+require "gplus/client"

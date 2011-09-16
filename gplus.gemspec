@@ -14,4 +14,8 @@ Gem::Specification.new do |gem|
   gem.name          = "gplus"
   gem.require_paths = ["lib"]
   gem.version       = Gplus::VERSION
+
+  gem.required_rubygems_version = Gem::Requirement.new('>= 1.3.6')
+  gem.add_runtime_dependency 'multi_json', '~> 1.0'
+  gem.add_runtime_dependency 'oauth2', '~> 0.5'
 end
