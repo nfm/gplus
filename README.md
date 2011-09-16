@@ -49,7 +49,7 @@ Finally, create an authorized client instance:
 
     client.authorize(current_user.oauth_code)
 
-## (People)[http://developers.google.com/+/api/latest/people]
+## [People](http://developers.google.com/+/api/latest/people)
 
 Get a person's profile with `client.get_person`:
 
