@@ -1,9 +1,12 @@
+require 'gplus/person'
+
 module Gplus
   class Client
     def initialize(options = {})
       @client_id = options[:client_id]
       @client_secret = options[:client_secret]
       @redirect_uri = options[:redirect_uri]
+      @token = options[:token]
 
       @oauth_client = OAuth2::Client.new(
         @client_id,
@@ -20,6 +23,16 @@ module Gplus
 
     def authorize(auth_code, redirect_uri = @redirect_uri)
       @access_token = @oauth_client.auth_code.get_token(auth_code, :redirect_uri => redirect_uri)
+    end
+
+  private
+    def access_token
+      @access_token ||= OAuth2::AccessToken.new(@oauth_client, @token)
+    end
+
+    def get(path)
+      response = access_token.get("v1/#{path}")
+      MultiJson.decode(response.body)
     end
   end
 end
