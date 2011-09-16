@@ -1,3 +1,4 @@
+require 'gplus/activity'
 require 'gplus/person'
 
 module Gplus
