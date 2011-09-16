@@ -1,4 +1,4 @@
-module GPlus
+module Gplus
   class Client
     def initialize(options = {})
       @client_id = options[:client_id]
