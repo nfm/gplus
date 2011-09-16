@@ -14,4 +14,7 @@ Gem::Specification.new do |gem|
   gem.name          = "gplus"
   gem.require_paths = ["lib"]
   gem.version       = Gplus::VERSION
+
+  gem.add_dependency 'multi_json', '>~ 1.0'
+  gem.add_dependency 'oauth', '>~ 0.5'
 end
