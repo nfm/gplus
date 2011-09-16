@@ -6,7 +6,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["nicholas@2suggestions.com.au"]
   gem.description   = %q{A complete implementation of the Google plus API for Ruby}
   gem.summary       = %q{Google+ API implementation with support for authorized requests, People, and Activities}
-  gem.homepage      = "https://github.com/nfm/gplus"
+  gem.homepage      = "https://github.com/nfm/Gplus"
 
   gem.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   gem.files         = `git ls-files`.split("\n")
