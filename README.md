@@ -2,15 +2,19 @@
 
 ## Intro
 
-The Google+ API was opened today (15th September 2011).
+GPlus is a complete implementation of the Google+ API, with help from OAuth2 and MultiJson.
 
-So far, there are two stub gems, `googleplus` and `google_plus`, both of which do literally nothing.
+I'm aiming to produce something light-weight, well documented, and thoroughly tested.
 
-Lets work together to get Ruby on Google+ ASAP!
+It currently has full support for People and Activities, and for authorized requests.
+
+Unauthorized requests for public resources is coming in version 0.3.0 (aiming for 2011/09/17)
 
 ## Installation
 
-gem install gplus
+Add GPlus to your Gemfile, then run `bundle install`.
+
+    gem "gplus", "~> 0.2.0"
 
 ## Creating and configuring your application
 

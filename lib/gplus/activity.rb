@@ -1,5 +1,5 @@
 module Gplus
-  module Activity
+  module Client
     def get_activity(id)
       get("activities/#{id}")
     end
