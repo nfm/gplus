@@ -4,8 +4,8 @@ require File.expand_path('../lib/gplus/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.authors       = ["Nicholas Firth-McCoy"]
   gem.email         = ["nicholas@2suggestions.com.au"]
-  gem.description   = %q{An *actual* Google+ gem!}
-  gem.summary       = %q{}
+  gem.description   = %q{A complete implementation of the Google plus API for Ruby}
+  gem.summary       = %q{Google+ API implementation with support for authorized requests, People, and Activities}
   gem.homepage      = "https://github.com/nfm/gplus"
 
   gem.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
