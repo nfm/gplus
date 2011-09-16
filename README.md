@@ -17,3 +17,11 @@ gem install gplus
 To make requests, you need to [create an application](https://code.google.com/apis/console) with access to the Google+ API.
 
 Next, [create an OAuth 2.0 client ID](http://code.google.com/apis/console#access). You'll need to pick a product name, an optional logo, and a domain to redirect to after authorization.
+
+You can then specify additional redirect URIs and allowed javascript origins.
+
+You'll need the Client ID and Client secret that are generated. Keep them secure!
+
+Create a Google+ client:
+
+    client = Gplus::Client.new(:client_id => 'YOUR_CLIENT_ID', :client_secret => 'YOUR_CLIENT_SECRET')
