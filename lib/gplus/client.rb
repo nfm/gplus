@@ -4,6 +4,7 @@ require 'gplus/person'
 module Gplus
   class Client
     def initialize(options = {})
+      @api_key = options[:api_key]
       @client_id = options[:client_id]
       @client_secret = options[:client_secret]
       @redirect_uri = options[:redirect_uri]
