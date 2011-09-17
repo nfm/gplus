@@ -22,6 +22,8 @@ Next, [create an OAuth 2.0 client ID](http://code.google.com/apis/console#access
 
 You can then specify additional redirect URIs and allowed javascript origins.
 
+Currently, the Google+ API limits applications to 1,000 API requests per day. You can request an increase to this limit by visiting the [developer console](https://code.google.com/apis/console/) under the 'Quotas' section for your application.
+
 ## Unauthorized requests (for public data)
 
 Create an API client using your API key:
