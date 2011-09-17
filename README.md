@@ -12,7 +12,7 @@ It currently has full support for the People and Activities APIs, using either O
 
 Add GPlus to your Gemfile, then run `bundle install`.
 
-    gem "gplus", "~> 0.2.0"
+    gem "gplus", "~> 0.3.0"
 
 ## Creating and configuring your application
 
