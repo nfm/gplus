@@ -31,8 +31,8 @@ module Gplus
       @access_token ||= OAuth2::AccessToken.new(@oauth_client, @token)
     end
 
-    def get(path)
-      response = access_token.get("v1/#{path}")
+    def get(path, params = {})
+      response = access_token.get("v1/#{path}", params)
       MultiJson.decode(response.body)
     end
   end
