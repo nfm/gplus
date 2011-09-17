@@ -8,8 +8,6 @@ I'm aiming to produce something light-weight, well documented, and thoroughly te
 
 It currently has full support for People and Activities, and for authorized requests.
 
-Unauthorized requests for public resources is coming in version 0.3.0 (aiming for 2011/09/17)
-
 ## Installation
 
 Add GPlus to your Gemfile, then run `bundle install`.
@@ -24,16 +22,24 @@ Next, [create an OAuth 2.0 client ID](http://code.google.com/apis/console#access
 
 You can then specify additional redirect URIs and allowed javascript origins.
 
-You'll need the Client ID and Client secret that are generated. Keep them secure!
+## Unauthorized requests (for public data)
+
+Create an API client using your API key:
+
+    @client = Gplus::Client.new(
+      :api_key => 'YOUR_API_KEY'
+    )
+
+You can now make requests for public data using the methods below for People and Activities.
 
 ## Authorized requests
 
-Create an instance of the client using the credentials from when you set up your application:
+First, create an API client using your Client ID, Client Secret, and one of the redirect URIs you have allowed:
 
     @client = Gplus::Client.new(
       :client_id => 'YOUR_CLIENT_ID',
       :client_secret => 'YOUR_CLIENT_SECRET',
-      :redirect_uri => 'http://example.com/oauth2callback'
+      :redirect_uri => 'http://example.com/oauth/callback'
     )
 
 Generate an authorization URL, and use it in a view:
@@ -45,13 +51,21 @@ Generate an authorization URL, and use it in a view:
 
 After the user authorizes your app, they will be redirected to your `redirect_uri`. Store `params[:code]`:
 
-    def oauth_callback_handler
-      current_user.update_attributes(:oauth_code => params[:code])
+    class OauthController < ApplicationController
+      def callback
+        current_user.update_attributes(:oauth_code => params[:code])
+      end
     end
 
 Finally, create an authorized client instance:
 
     client.authorize(current_user.oauth_code)
+
+If you have an OAuth code stored, you can use it to initialize your API client:
+
+    @client = Gplus::Client.new(
+      :token => current_user.oauth_code,
+    )
 
 ## [People](http://developers.google.com/+/api/latest/people)
 
@@ -83,7 +97,7 @@ The activity will be returned as a nested hash:
 
 List a person's activities with `client.list_activities`:
 
-    activities = client.list_activities(id)
+    activities = client.list_activities(person_id)
 
 The list will be returned as a nested hash. The actual activities are in the `:items` array:
 
