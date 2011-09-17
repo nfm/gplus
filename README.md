@@ -8,11 +8,14 @@ I'm aiming to produce something light-weight, well documented, and thoroughly te
 
 It currently has full support for the People and Activities APIs, using either OAuth requests for private data or API key requests for public data.
 
+* [Documentation](http://rubydoc.info/gems/gplus/frames)
+* [Issues](https://github.com/nfm/gplus/issues)
+
 ## Installation
 
 Add GPlus to your Gemfile, then run `bundle install`.
 
-    gem "gplus", "~> 0.2.0"
+    gem "gplus", "~> 0.3.1"
 
 ## Creating and configuring your application
 
@@ -21,6 +24,8 @@ To make requests, you need to [create an application](https://code.google.com/ap
 Next, [create an OAuth 2.0 client ID](http://code.google.com/apis/console#access). You'll need to pick a product name, an optional logo, and a domain to redirect to after authorization.
 
 You can then specify additional redirect URIs and allowed javascript origins.
+
+Currently, the Google+ API limits applications to 1,000 API requests per day. You can request an increase to this limit by visiting the [developer console](https://code.google.com/apis/console/) under the 'Quotas' section for your application.
 
 ## Unauthorized requests (for public data)
 
