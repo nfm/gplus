@@ -6,7 +6,7 @@ GPlus is a complete implementation of the Google+ API, with help from OAuth2 and
 
 I'm aiming to produce something light-weight, well documented, and thoroughly tested.
 
-It currently has full support for People and Activities, and for authorized requests.
+It currently has full support for the People and Activities APIs, using either OAuth requests for private data or API key requests for public data.
 
 ## Installation
 
