@@ -29,11 +29,17 @@ module Gplus
 
   private
     def access_token
-      @access_token ||= OAuth2::AccessToken.new(@oauth_client, @token)
+      if @token
+        @access_token ||= OAuth2::AccessToken.new(@oauth_client, @token)
+      end
     end
 
     def get(path, params = {})
-      response = access_token.get("v1/#{path}", params)
+      if access_token
+        response = access_token.get("v1/#{path}", params)
+      else
+        response = @oauth_client.request(:get, "v1/#{path}", { :params => params.merge(:key => @api_key) })
+      end
       MultiJson.decode(response.body)
     end
   end
