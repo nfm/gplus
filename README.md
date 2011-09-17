@@ -8,6 +8,9 @@ I'm aiming to produce something light-weight, well documented, and thoroughly te
 
 It currently has full support for the People and Activities APIs, using either OAuth requests for private data or API key requests for public data.
 
+* [Documentation](http://rubydoc.info/gems/gplus/frames)
+* [Issues](https://github.com/nfm/gplus/issues)
+
 ## Installation
 
 Add GPlus to your Gemfile, then run `bundle install`.
