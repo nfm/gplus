@@ -1,19 +1,19 @@
-# Gplus: A Google+ API client library for Ruby
+# gplus: A Google+ API client library for Ruby
 
 ## Intro
 
-GPlus is a complete implementation of the Google+ API, with help from OAuth2 and MultiJson.
+gplus is a complete implementation of the Google+ API, with help from OAuth2 and MultiJson.
 
 I'm aiming to produce something light-weight, well documented, and thoroughly tested.
 
 It currently has full support for the People and Activities APIs, using either OAuth requests for private data or API key requests for public data.
 
-* [Documentation](http://rubydoc.info/gems/gplus/frames)
+* [Documentation](http://rubydoc.info/github/nfm/gplus/master/frames)
 * [Issues](https://github.com/nfm/gplus/issues)
 
 ## Installation
 
-Add GPlus to your Gemfile, then run `bundle install`.
+Add gplus to your Gemfile, then run `bundle install`.
 
     gem "gplus", "~> 0.3.1"
 
@@ -86,7 +86,7 @@ The person's profile will be returned as a nested hash:
     person[:urls].count
     person[:name][:middleName]
 
-See the API documentation for [People](http://developers.google.com/+/api/latest/people) and [People: get](http://developers.google.com/+/api/latest/people/get) for more info.
+See the Google+ API documentation for [People](http://developers.google.com/+/api/latest/people) and [People: get](http://developers.google.com/+/api/latest/people/get) for more info.
 
 ## [Activities](http://developers.google.com/+/api/latest/activities)
 
@@ -120,9 +120,9 @@ If you want more than 100 results, take the `:nextPageToken` returned from your 
     activities = client.list_activities(id, :results => 100)
     more_activities = client.list_activities(id, :results => 100, :page => activities[:nextPageToken])
 
-See the API documentation for [Activities](http://developers.google.com/+/api/latest/activities), [Activities: get](http://developers.google.com/+/api/latest/activities/get) and [Activities: list](http://developers.google.com/+/api/latest/activities/list).
+See the Google+ API documentation for [Activities](http://developers.google.com/+/api/latest/activities), [Activities: get](http://developers.google.com/+/api/latest/activities/get) and [Activities: list](http://developers.google.com/+/api/latest/activities/list).
 
-## Contributing to Gplus
+## Contributing to gplus
 
 Please submit bug reports as [Github Issues](https://github.com/nfm/Gplus/issues).
 
