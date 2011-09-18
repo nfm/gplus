@@ -72,16 +72,29 @@ Now you can create an authorized client instance using the stored OAuth token:
     @client = Gplus::Client.new(
       :token => current_user.token,
       :refresh_token => current_user.refresh_token,
+      :token_expires_at => current_user.token_expires_at,
       :client_id => 'YOUR_CLIENT_ID',
       :client_secret => 'YOUR_CLIENT_SECRET',
       :redirect_uri => 'http://example.com/oauth/callback'
     )
 
-If you have an OAuth code stored, you can use it to initialize your API client:
+## Refreshing OAuth tokens
 
-    @client = Gplus::Client.new(
-      :token => current_user.oauth_code,
-    )
+Google+ OAuth tokens are currently only valid for 3600 seconds (one hour). You can use the `:refresh_token` to get a new OAuth token after your existing token expires, without requiring the user to re-authorize your application.
+
+Gplus will automatically request a new token if the provided token has expired. You should check to see if this has occured so that you can store the new token. Otherwise, after the initial token expires, you'll be requesting a new token from Google each time you initialize an API client. This is slow!
+
+You can determine whether a token has been refreshed by calling `access_token_refreshed?`:
+
+    if @client.access_token_refreshed?
+      access_token = @client.access_token
+      current_user.update_attributes(
+        :token => access_token.token,
+        :token_expires_at => access_token.expires_at
+      )
+    end
+
+The refreshed OAuth token will have `:refresh_token` set to `nil`. Keep using the initial `:refresh_token` you were given for all future refreshes.
 
 ## [People](http://developers.google.com/+/api/latest/people)
 
