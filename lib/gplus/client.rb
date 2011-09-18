@@ -9,6 +9,7 @@ module Gplus
     # @option options [String] :api_key Your application's API key, used for non-authenticated requests (for public data).
     # @option options [String] :token The OAuth token to authorize the API client for authenticated requests (for non-public data). This can be supplied after initialization by calling {#authorize}.
     # @option options [String] :refresh_token The OAuth refresh_token, to request a new token if the provided token has expired.
+    # @option options [Integer] :token_expires_at The time that the OAuth token expires at in seconds since the epoch.
     # @option options [String] :client_id Your application's Client ID. Required to generate an authorization URL with {#authorize_url}.
     # @option options [String] :client_secret Your application's Client Secret. Required to generate an authorization URL with {#authorize_url}.
     # @option options [String] :redirect_uri The default URI to redirect to after authorization. You can override this in many other methods. It must be specified as an authorized URI in your application's console. Required to generate an authorization URL with #authorize_url.
@@ -17,6 +18,7 @@ module Gplus
       @api_key = options[:api_key]
       @token = options[:token]
       @refresh_token = options[:refresh_token]
+      @token_expires_at = options[:token_expires_at]
       @client_id = options[:client_id]
       @client_secret = options[:client_secret]
       @redirect_uri = options[:redirect_uri]
