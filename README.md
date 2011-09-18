@@ -54,17 +54,28 @@ Generate an authorization URL, and use it in a view:
 
     = link_to 'Authorize This App', @auth_url
 
-After the user authorizes your app, they will be redirected to your `redirect_uri`. Store `params[:code]`:
+After the user authorizes your app, they will be redirected to your `redirect_uri`. Use `params[:code]` to retrieve an OAuth token for the user, and store the `token`, `refresh_token` and `expires_at` for persistence:
 
     class OauthController < ApplicationController
       def callback
-        current_user.update_attributes(:oauth_code => params[:code])
+        access_token = client.authorize(params[:code])
+        current_user.update_attributes(
+          :token => access_token.token,
+          :refresh_token => access_token.refresh_token,
+          :token_expires_at => access_token.expires_at
+        )
       end
     end
 
-Finally, create an authorized client instance:
+Now you can create an authorized client instance using the stored OAuth token:
 
-    client.authorize(current_user.oauth_code)
+    @client = Gplus::Client.new(
+      :token => current_user.token,
+      :refresh_token => current_user.refresh_token,
+      :client_id => 'YOUR_CLIENT_ID',
+      :client_secret => 'YOUR_CLIENT_SECRET',
+      :redirect_uri => 'http://example.com/oauth/callback'
+    )
 
 If you have an OAuth code stored, you can use it to initialize your API client:
 
