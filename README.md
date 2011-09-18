@@ -1,19 +1,19 @@
-# Gplus: A Google+ API client library for Ruby
+# gplus: A Google+ API client library for Ruby
 
 ## Intro
 
-GPlus is a complete implementation of the Google+ API, with help from OAuth2 and MultiJson.
+gplus is a complete implementation of the Google+ API, with help from OAuth2 and MultiJson.
 
 I'm aiming to produce something light-weight, well documented, and thoroughly tested.
 
 It currently has full support for the People and Activities APIs, using either OAuth requests for private data or API key requests for public data.
 
-* [Documentation](http://rubydoc.info/gems/gplus/frames)
+* [Documentation](http://rubydoc.info/github/nfm/gplus/master/frames)
 * [Issues](https://github.com/nfm/gplus/issues)
 
 ## Installation
 
-Add GPlus to your Gemfile, then run `bundle install`.
+Add gplus to your Gemfile, then run `bundle install`.
 
     gem "gplus", "~> 0.3.1"
 
@@ -54,23 +54,47 @@ Generate an authorization URL, and use it in a view:
 
     = link_to 'Authorize This App', @auth_url
 
-After the user authorizes your app, they will be redirected to your `redirect_uri`. Store `params[:code]`:
+After the user authorizes your app, they will be redirected to your `redirect_uri`. Use `params[:code]` to retrieve an OAuth token for the user, and store the `token`, `refresh_token` and `expires_at` for persistence:
 
     class OauthController < ApplicationController
       def callback
-        current_user.update_attributes(:oauth_code => params[:code])
+        access_token = client.authorize(params[:code])
+        current_user.update_attributes(
+          :token => access_token.token,
+          :refresh_token => access_token.refresh_token,
+          :token_expires_at => access_token.expires_at
+        )
       end
     end
 
-Finally, create an authorized client instance:
-
-    client.authorize(current_user.oauth_code)
-
-If you have an OAuth code stored, you can use it to initialize your API client:
+Now you can create an authorized client instance using the stored OAuth token:
 
     @client = Gplus::Client.new(
-      :token => current_user.oauth_code,
+      :token => current_user.token,
+      :refresh_token => current_user.refresh_token,
+      :token_expires_at => current_user.token_expires_at,
+      :client_id => 'YOUR_CLIENT_ID',
+      :client_secret => 'YOUR_CLIENT_SECRET',
+      :redirect_uri => 'http://example.com/oauth/callback'
     )
+
+## Refreshing OAuth tokens
+
+Google+ OAuth tokens are currently only valid for 3600 seconds (one hour). You can use the `:refresh_token` to get a new OAuth token after your existing token expires, without requiring the user to re-authorize your application.
+
+Gplus will automatically request a new token if the provided token has expired. You should check to see if this has occured so that you can store the new token. Otherwise, after the initial token expires, you'll be requesting a new token from Google each time you initialize an API client. This is slow!
+
+You can determine whether a token has been refreshed by calling `access_token_refreshed?`:
+
+    if @client.access_token_refreshed?
+      access_token = @client.access_token
+      current_user.update_attributes(
+        :token => access_token.token,
+        :token_expires_at => access_token.expires_at
+      )
+    end
+
+The refreshed OAuth token will have `:refresh_token` set to `nil`. Keep using the initial `:refresh_token` you were given for all future refreshes.
 
 ## [People](http://developers.google.com/+/api/latest/people)
 
@@ -86,7 +110,7 @@ The person's profile will be returned as a nested hash:
     person[:urls].count
     person[:name][:middleName]
 
-See the API documentation for [People](http://developers.google.com/+/api/latest/people) and [People: get](http://developers.google.com/+/api/latest/people/get) for more info.
+See the Google+ API documentation for [People](http://developers.google.com/+/api/latest/people) and [People: get](http://developers.google.com/+/api/latest/people/get) for more info.
 
 ## [Activities](http://developers.google.com/+/api/latest/activities)
 
@@ -120,9 +144,9 @@ If you want more than 100 results, take the `:nextPageToken` returned from your 
     activities = client.list_activities(id, :results => 100)
     more_activities = client.list_activities(id, :results => 100, :page => activities[:nextPageToken])
 
-See the API documentation for [Activities](http://developers.google.com/+/api/latest/activities), [Activities: get](http://developers.google.com/+/api/latest/activities/get) and [Activities: list](http://developers.google.com/+/api/latest/activities/list).
+See the Google+ API documentation for [Activities](http://developers.google.com/+/api/latest/activities), [Activities: get](http://developers.google.com/+/api/latest/activities/get) and [Activities: list](http://developers.google.com/+/api/latest/activities/list).
 
-## Contributing to Gplus
+## Contributing to gplus
 
 Please submit bug reports as [Github Issues](https://github.com/nfm/Gplus/issues).
 
