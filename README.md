@@ -13,9 +13,9 @@ It currently has full support for the People and Activities APIs, using either O
 
 ## Installation
 
-Add gplus to your Gemfile, then run `bundle install`.
+Add the current version of gplus to your Gemfile, then run `bundle install`.
 
-    gem "gplus", "~> 0.3.1"
+    gem "gplus"
 
 ## Creating and configuring your application
 
