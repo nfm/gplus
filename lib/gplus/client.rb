@@ -54,8 +54,17 @@ module Gplus
     # @return An OAuth2::AccessToken
     def access_token
       if @token
-        @access_token ||= OAuth2::AccessToken.new(@oauth_client, @token, :refresh_token => @refresh_token)
+        @access_token ||= OAuth2::AccessToken.new(@oauth_client, @token, :refresh_token => @refresh_token, :expires_at => @token_expires_at)
+        if @access_token.expired?
+          @access_token.refresh!
+          @access_token_refreshed = true
+        end
       end
+    end
+
+    # Return true if the user's access token has been refreshed. If so, you should store the new token's :token and :expires_at.
+    def access_token_refreshed?
+      @access_token_refreshed
     end
 
   private
