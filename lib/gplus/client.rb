@@ -39,6 +39,7 @@ module Gplus
     end
 
     # Authorize an API client instance to access the user's private data.
+    #
     # @param [String] auth_code The code returned to your redirect_uri after the user authorized your application to access their Google+ data.
     # @param [String] redirect_uri An optional over-ride for the redirect_uri you initialized the API client with.
     # @return [OAuth2::AccessToken] An OAuth access token. Store access_token[:token] and access_token[:refresh_token] to get persistent access to the user's data until access_token[:expires_at].
@@ -46,13 +47,16 @@ module Gplus
       @access_token = @oauth_client.auth_code.get_token(auth_code, :redirect_uri => redirect_uri)
     end
 
-  private
+    # Retrieve or create an OAuth2::AccessToken, using the :token and :refresh_token specified when the API client instance was initialized
+    #
+    # @return An OAuth2::AccessToken
     def access_token
       if @token
-        @access_token ||= OAuth2::AccessToken.new(@oauth_client, @token)
+        @access_token ||= OAuth2::AccessToken.new(@oauth_client, @token, :refresh_token => @refresh_token)
       end
     end
 
+  private
     def get(path, params = {})
       if access_token
         response = access_token.get("v1/#{path}", params)
