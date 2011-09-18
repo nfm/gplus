@@ -10,6 +10,7 @@ It currently has full support for the People and Activities APIs, using either O
 
 * [Documentation](http://rubydoc.info/github/nfm/gplus/master/frames)
 * [Issues](https://github.com/nfm/gplus/issues)
+* [Changelog](https://github.com/nfm/gplus/blob/master/CHANGELOG.md)
 
 ## Installation
 
