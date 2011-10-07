@@ -18,4 +18,5 @@ Gem::Specification.new do |gem|
   gem.required_rubygems_version = Gem::Requirement.new('>= 1.3.6')
   gem.add_runtime_dependency 'multi_json', '~> 1.0'
   gem.add_runtime_dependency 'oauth2', '~> 0.5'
+  gem.add_development_dependency 'rspec'
 end
