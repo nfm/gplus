@@ -123,7 +123,7 @@ The activity will be returned as a nested hash:
 
     activity[:actor][:displayName]
     activity[:object][:replies][:totalItems]
-    activity[:attachments].each do { |a| a[:url] }
+    activity[:attachments].each do { |attachment| attachment[:url] }
 
 List a person's activities with `client.list_activities`:
 
@@ -133,19 +133,53 @@ The list will be returned as a nested hash. The actual activities are in the `:i
 
     activities[:title]
     activities[:updated]
-    activities[:items].each { |a| a.title }
+    activities[:items].each { |activity| activity[:title] }
 
 By default, this will fetch 20 activities. You can fetch between 1 and 100 by passing a `:results` argument:
 
     # Get 80 results
-    client.list_activities(id, :results => 80)
+    client.list_activities(person_id, :results => 80)
 
 If you want more than 100 results, take the `:nextPageToken` returned from your first request, and pass it as a `:page` argument:
 
-    activities = client.list_activities(id, :results => 100)
-    more_activities = client.list_activities(id, :results => 100, :page => activities[:nextPageToken])
+    activities = client.list_activities(person_id, :results => 100)
+    more_activities = client.list_activities(person_id, :results => 100, :page => activities[:nextPageToken])
 
 See the Google+ API documentation for [Activities](http://developers.google.com/+/api/latest/activities), [Activities: get](http://developers.google.com/+/api/latest/activities/get) and [Activities: list](http://developers.google.com/+/api/latest/activities/list).
+
+## [Comments](http://developers.google.com/+/api/latest/comments)
+
+Get an activity with `client.get_comment`:
+
+    comment = client.get_comment(id)
+
+The activity will be returned as a nested hash:
+
+    comment[:actor][:displayName]
+    comment[:object][:content][:totalItems]
+    comment[:inReplyTo][:id]
+
+List an activity's comments with `client.list_comments`:
+
+    comments = client.list_comments(activity_id)
+
+The list will be returned as a nested hash. The actual comments are in the `:items` array:
+
+    comments[:title]
+    comments[:updated]
+    comments[:items].each { |comment| comment[:object][:content] }
+
+By default, this will fetch 20 comments. You can fetch between 1 and 100 by passing a `:results` argument:
+
+    # Get 80 results
+    client.list_comments(activity_id, :results => 80)
+
+If you want more than 100 results, take the `:nextPageToken` returned from your first request, and pass it as a `:page` argument:
+
+    comments = client.list_comments(activity_id, :results => 100)
+    more_comments = client.list_comments(activity_id, :results => 100, :page => comments[:nextPageToken])
+
+See the Google+ API documentation for [Comments](http://developers.google.com/+/api/latest/comments), [Comments: get](http://developers.google.com/+/api/latest/comments/get) and [Comments: list](http://developers.google.com/+/api/latest/comments/list).
 
 ## Contributing to gplus
 
