@@ -1,8 +1,10 @@
 # Changelog
 
-## v0.5.0: 2011/09/18
+## v0.5.0: 2011/10/15
 
 * Add support for the Comments API
+* Stub out rspec examples
+* Improve README
 
 ## v0.4.0: 2011/09/18
 
