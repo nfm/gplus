@@ -1,0 +1,2 @@
+require 'gplus'
+require 'rspec'
