@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.0: 2011/09/18
+
+* Add support for the Comments API
+
 ## v0.4.0: 2011/09/18
 
 * Handle refreshing of OAuth tokens
