@@ -1,3 +1,5 @@
+require 'spec_helper'
+
 describe Gplus::Client do
   describe '.get_comment' do
     pending
