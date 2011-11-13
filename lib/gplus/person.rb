@@ -15,7 +15,7 @@ module Gplus
     # @option options [String] query The full text query to search for
     # @option options [Integer] maxResults The number of profiles, between 1 and 20, to return. Defaults to 10.
     # @option options [String] pageToken The page of profiles to fetch. Pass the value of :nextPageToken from the previous result set to get the next page of results.
-    # @return [Hash] A nested hash representation of a {http://developers.google.com/+/api/latest/activities/list#response search result for people}.
+    # @return [Hash] A nested hash representation of a {http://developers.google.com/+/api/latest/people/search#response search result for people}.
     def search_people(options = {})
       get("people", options)
     end
