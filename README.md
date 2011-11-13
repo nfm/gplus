@@ -6,7 +6,7 @@ gplus is a complete implementation of the Google+ API, with help from OAuth2 and
 
 I'm aiming to produce something light-weight, well documented, and thoroughly tested.
 
-It currently has full support for the People and Activities APIs, using either OAuth requests for private data or API key requests for public data.
+It currently has full support for the People, Activities and Comments APIs, using either OAuth requests for private data or API key requests for public data.
 
 * [Documentation](http://rubydoc.info/github/nfm/gplus/master/frames)
 * [Issues](https://github.com/nfm/gplus/issues)
@@ -14,9 +14,7 @@ It currently has full support for the People and Activities APIs, using either O
 
 ## Installation
 
-Add the current version of gplus to your Gemfile, then run `bundle install`.
-
-    gem "gplus"
+Add `gplus` to your Gemfile, then run `bundle install`.
 
 ## Creating and configuring your application
 
@@ -32,17 +30,17 @@ Currently, the Google+ API limits applications to 1,000 API requests per day. Yo
 
 Create an API client using your API key:
 
-    @client = Gplus::Client.new(
+    @gplus = Gplus::Client.new(
       :api_key => 'YOUR_API_KEY'
     )
 
-You can now make requests for public data using the methods below for People and Activities.
+You can now make requests for public data using the methods below.
 
 ## Authorized requests
 
 First, create an API client using your Client ID, Client Secret, and one of the redirect URIs you have allowed:
 
-    @client = Gplus::Client.new(
+    @gplus = Gplus::Client.new(
       :client_id => 'YOUR_CLIENT_ID',
       :client_secret => 'YOUR_CLIENT_SECRET',
       :redirect_uri => 'http://example.com/oauth/callback'
@@ -50,7 +48,7 @@ First, create an API client using your Client ID, Client Secret, and one of the 
 
 Generate an authorization URL, and use it in a view:
 
-    @auth_url = @client.authorization_url
+    @auth_url = @gplus.authorization_url
     => https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=YOUR_CLIENT_ID&redirect_uri= ...
 
     = link_to 'Authorize This App', @auth_url
@@ -59,7 +57,7 @@ After the user authorizes your app, they will be redirected to your `redirect_ur
 
     class OauthController < ApplicationController
       def callback
-        access_token = client.authorize(params[:code])
+        access_token = @gplus.authorize(params[:code])
         current_user.update_attributes(
           :token => access_token.token,
           :refresh_token => access_token.refresh_token,
@@ -70,7 +68,7 @@ After the user authorizes your app, they will be redirected to your `redirect_ur
 
 Now you can create an authorized client instance using the stored OAuth token:
 
-    @client = Gplus::Client.new(
+    @gplus = Gplus::Client.new(
       :token => current_user.token,
       :refresh_token => current_user.refresh_token,
       :token_expires_at => current_user.token_expires_at,
@@ -87,8 +85,8 @@ Gplus will automatically request a new token if the provided token has expired. 
 
 You can determine whether a token has been refreshed by calling `access_token_refreshed?`:
 
-    if @client.access_token_refreshed?
-      access_token = @client.access_token
+    if @gplus.access_token_refreshed?
+      access_token = @gplus.access_token
       current_user.update_attributes(
         :token => access_token.token,
         :token_expires_at => access_token.expires_at
@@ -99,9 +97,9 @@ The refreshed OAuth token will have `:refresh_token` set to `nil`. Keep using th
 
 ## [People](http://developers.google.com/+/api/latest/people)
 
-Get a person's profile with `client.get_person`:
+Get a person's profile with `.get_person`:
 
-    person = client.get_person(id)
+    person = @gplus.get_person(id)
 
 You can use the id 'me' in place of a Person ID to fetch information about the user the client is authorized as.
 
@@ -111,13 +109,35 @@ The person's profile will be returned as a nested hash:
     person[:urls].count
     person[:name][:middleName]
 
-See the Google+ API documentation for [People](http://developers.google.com/+/api/latest/people) and [People: get](http://developers.google.com/+/api/latest/people/get) for more info.
+Search for public profiles with `.search_people`:
+
+    people = @gplus.search_people(:query => 'Larry Page')
+
+Matching profiles will be returned in a nested hash. The actual profiles are in the `:items` array:
+
+    people[:selfLink]
+    people[:nextPageToken]
+    people[:items]
+
+By default, this will fetch 10 profiles. You can fetch between 1 and 20 by passing a `:maxResults` option:
+
+    # Get 20 results
+    @gplus.search_people(:query => 'Larry Page', :maxResults => 20)
+
+If you want more than 20 results, take the `:nextPageToken` returned from your first request, and pass it as a `:pageToken` option:
+
+    people = @gplus.search_people(:query => 'Larry Page', :maxResults => 20)
+    more_people = @gplus.search_people(:query => 'Larry Page', :maxResults => 20, :pageToken => people[:nextPageToken])
+
+Omitting the `:query` option will simply return all profiles.
+
+See the Google+ API documentation for [People](http://developers.google.com/+/api/latest/people), [People: get](http://developers.google.com/+/api/latest/people/get) and [People: search](http://developers.google.com/+/api/latest/people/search).
 
 ## [Activities](http://developers.google.com/+/api/latest/activities)
 
-Get an activity with `client.get_activity`:
+Get an activity with `.get_activity`:
 
-    activity = client.get_activity(id)
+    activity = @gplus.get_activity(id)
 
 The activity will be returned as a nested hash:
 
@@ -125,9 +145,9 @@ The activity will be returned as a nested hash:
     activity[:object][:replies][:totalItems]
     activity[:attachments].each do { |attachment| attachment[:url] }
 
-List a person's activities with `client.list_activities`:
+List a person's activities with `.list_activities`:
 
-    activities = client.list_activities(person_id)
+    activities = @gplus.list_activities(person_id)
 
 The list will be returned as a nested hash. The actual activities are in the `:items` array:
 
@@ -138,20 +158,46 @@ The list will be returned as a nested hash. The actual activities are in the `:i
 By default, this will fetch 20 activities. You can fetch between 1 and 100 by passing a `:maxResults` option:
 
     # Get 80 results
-    client.list_activities(person_id, :maxResults => 80)
+    @gplus.list_activities(person_id, :maxResults => 80)
 
 If you want more than 100 results, take the `:nextPageToken` returned from your first request, and pass it as a `:pageToken` option:
 
-    activities = client.list_activities(person_id, :maxResults => 100)
-    more_activities = client.list_activities(person_id, :maxResults => 100, :pageToken => activities[:nextPageToken])
+    activities = @gplus.list_activities(person_id, :maxResults => 100)
+    more_activities = @gplus.list_activities(person_id, :maxResults => 100, :pageToken => activities[:nextPageToken])
 
-See the Google+ API documentation for [Activities](http://developers.google.com/+/api/latest/activities), [Activities: get](http://developers.google.com/+/api/latest/activities/get) and [Activities: list](http://developers.google.com/+/api/latest/activities/list).
+Search for public activities with `.search_activities`:
+
+    activities = @gplus.search_activities(:query => 'Programming')
+
+Matching activities will be returned in a nested hash. The actual activities are in the `:items` array:
+
+    activities[:selfLink]
+    activities[:nextPageToken]
+    activities[:items]
+
+By default, this will fetch 10 activities. You can fetch between 1 and 20 by passing a `:maxResults` option:
+
+    # Get 20 results
+    @gplus.search_activities(:query => 'Programming', :maxResults => 20)
+
+If you want more than 20 results, take the `:nextPageToken` returned from your first request, and pass it as a `:pageToken` option:
+
+    activities = @gplus.search_activities(:query => 'Programming', :maxResults => 20)
+    more_activities = @gplus.search_activities(:query => 'Programming', :maxResults => 20, :pageToken => activities[:nextPageToken])
+
+Omitting the `:query` option will simply return all activities.
+
+You can specify an order for the activities that are returned by passing an `:orderBy` option. Acceptable values are "best" and "recent" (the default).
+
+    activities = @gplus.search_activities(:query => 'Programming', :orderBy => "best")
+
+See the Google+ API documentation for [Activities](http://developers.google.com/+/api/latest/activities), [Activities: get](http://developers.google.com/+/api/latest/activities/get) and [Activities: list](http://developers.google.com/+/api/latest/activities/list), and [Activities: search](http://developers.google.com/+/api/latest/activities/search).
 
 ## [Comments](http://developers.google.com/+/api/latest/comments)
 
-Get an activity with `client.get_comment`:
+Get an activity with `.get_comment`:
 
-    comment = client.get_comment(id)
+    comment = @gplus.get_comment(id)
 
 The activity will be returned as a nested hash:
 
@@ -159,9 +205,9 @@ The activity will be returned as a nested hash:
     comment[:object][:content][:totalItems]
     comment[:inReplyTo][:id]
 
-List an activity's comments with `client.list_comments`:
+List an activity's comments with `.list_comments`:
 
-    comments = client.list_comments(activity_id)
+    comments = @gplus.list_comments(activity_id)
 
 The list will be returned as a nested hash. The actual comments are in the `:items` array:
 
@@ -172,12 +218,12 @@ The list will be returned as a nested hash. The actual comments are in the `:ite
 By default, this will fetch 20 comments. You can fetch between 1 and 100 by passing a `:maxResults` option:
 
     # Get 80 results
-    client.list_comments(activity_id, :maxResults => 80)
+    @gplus.list_comments(activity_id, :maxResults => 80)
 
 If you want more than 100 results, take the `:nextPageToken` returned from your first request, and pass it as a `:pageToken` option:
 
-    comments = client.list_comments(activity_id, :maxResults => 100)
-    more_comments = client.list_comments(activity_id, :maxResults => 100, :pageToken => comments[:nextPageToken])
+    comments = @gplus.list_comments(activity_id, :maxResults => 100)
+    more_comments = @gplus.list_comments(activity_id, :maxResults => 100, :pageToken => comments[:nextPageToken])
 
 See the Google+ API documentation for [Comments](http://developers.google.com/+/api/latest/comments), [Comments: get](http://developers.google.com/+/api/latest/comments/get) and [Comments: list](http://developers.google.com/+/api/latest/comments/list).
 
