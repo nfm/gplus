@@ -135,15 +135,15 @@ The list will be returned as a nested hash. The actual activities are in the `:i
     activities[:updated]
     activities[:items].each { |activity| activity[:title] }
 
-By default, this will fetch 20 activities. You can fetch between 1 and 100 by passing a `:results` argument:
+By default, this will fetch 20 activities. You can fetch between 1 and 100 by passing a `:maxResults` option:
 
     # Get 80 results
-    client.list_activities(person_id, :results => 80)
+    client.list_activities(person_id, :maxResults => 80)
 
-If you want more than 100 results, take the `:nextPageToken` returned from your first request, and pass it as a `:page` argument:
+If you want more than 100 results, take the `:nextPageToken` returned from your first request, and pass it as a `:pageToken` option:
 
-    activities = client.list_activities(person_id, :results => 100)
-    more_activities = client.list_activities(person_id, :results => 100, :page => activities[:nextPageToken])
+    activities = client.list_activities(person_id, :maxResults => 100)
+    more_activities = client.list_activities(person_id, :maxResults => 100, :pageToken => activities[:nextPageToken])
 
 See the Google+ API documentation for [Activities](http://developers.google.com/+/api/latest/activities), [Activities: get](http://developers.google.com/+/api/latest/activities/get) and [Activities: list](http://developers.google.com/+/api/latest/activities/list).
 

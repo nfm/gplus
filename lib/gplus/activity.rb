@@ -13,11 +13,11 @@ module Gplus
     # See http://developers.google.com/+/api/latest/activities/list for more details.
     #
     # @param [String] person_id The unique ID of the person whose activities you want to list. Pass the string 'me' to list the activities for the person that the API client is authorized as.
-    # @param [Integer] results The number of activities, between 1 and 100, to return.
-    # @param [String] page The page of activities to fetch. Pass the value of :nextPageToken from the previous result set to get the next page of results.
+    # @option options [Integer] maxResults The number of activities, between 1 and 100, to return.
+    # @option options [String] pageToken The page of activities to fetch. Pass the value of :nextPageToken from the previous result set to get the next page of results.
     # @return [Hash] A nested hash representation of {http://developers.google.com/+/api/latest/activities/list list of activities}.
-    def list_activities(person_id, results = 20, page = nil)
-      get("people/#{person_id}/activities/public", { :maxResults => results, :pageToken => page })
+    def list_activities(person_id, options = {})
+      get("people/#{person_id}/activities/public", options)
     end
   end
 end
