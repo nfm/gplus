@@ -1,8 +1,14 @@
 require 'gplus/activity'
+require 'gplus/comment'
 require 'gplus/person'
 
 module Gplus
   class Client
+    DEFAULT_ENDPOINT = 'https://www.googleapis.com/plus'
+    DEFAULT_API_VERSION = 'v1'
+
+    attr_accessor :endpoint, :api_version
+
     # Create a Google+ API client. Read the {file:README.md README} to find learn about the different ways of initializing a client.
     #
     # @param [Hash] options
@@ -15,6 +21,9 @@ module Gplus
     # @option options [String] :redirect_uri The default URI to redirect to after authorization. You can override this in many other methods. It must be specified as an authorized URI in your application's console. Required to generate an authorization URL with #authorize_url.
     # @return [Gplus::Client] A Google+ API client.
     def initialize(options = {})
+      self.endpoint = DEFAULT_ENDPOINT
+      self.api_version = DEFAULT_API_VERSION
+
       @api_key = options[:api_key]
       @token = options[:token]
       @refresh_token = options[:refresh_token]
@@ -26,7 +35,7 @@ module Gplus
       @oauth_client = OAuth2::Client.new(
         @client_id,
         @client_secret,
-        :site => 'https://www.googleapis.com/plus/',
+        :site => self.endpoint,
         :authorize_url => 'https://accounts.google.com/o/oauth2/auth',
         :token_url => 'https://accounts.google.com/o/oauth2/token'
       )
@@ -70,9 +79,9 @@ module Gplus
   private
     def get(path, params = {})
       if access_token
-        response = access_token.get("v1/#{path}", params)
+        response = access_token.get("#{self.api_version}/#{path}", params)
       else
-        response = @oauth_client.request(:get, "v1/#{path}", { :params => params.merge(:key => @api_key) })
+        response = @oauth_client.request(:get, "#{self.api_version}/#{path}", { :params => params.merge(:key => @api_key) })
       end
       MultiJson.decode(response.body)
     end
