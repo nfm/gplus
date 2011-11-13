@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.0.0: 2011/11/13
+
+* Add support for searching for People and Activities
+* Full test coverage of People, Activity and Comment methods
+* Change `#list_activities` and `#list_comments` methods to take an options hash rather than separate :results and :page arguments
+
 ## v0.5.0: 2011/10/15
 
 * Add support for the Comments API
