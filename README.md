@@ -191,7 +191,7 @@ You can specify an order for the activities that are returned by passing an `:or
 
     activities = @gplus.search_activities(:query => 'Programming', :orderBy => "best")
 
-See the Google+ API documentation for [Activities](http://developers.google.com/+/api/latest/activities), [Activities: get](http://developers.google.com/+/api/latest/activities/get) and [Activities: list](http://developers.google.com/+/api/latest/activities/list), and [Activities: search](http://developers.google.com/+/api/latest/activities/search).
+See the Google+ API documentation for [Activities](http://developers.google.com/+/api/latest/activities), [Activities: get](http://developers.google.com/+/api/latest/activities/get), [Activities: list](http://developers.google.com/+/api/latest/activities/list), and [Activities: search](http://developers.google.com/+/api/latest/activities/search).
 
 ## [Comments](http://developers.google.com/+/api/latest/comments)
 
