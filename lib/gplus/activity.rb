@@ -19,5 +19,17 @@ module Gplus
     def list_activities(person_id, options = {})
       get("people/#{person_id}/activities/public", options)
     end
+
+    # Search all public Google+ activities.
+    # See https://developers.google.com/+/api/latest/activities/search for more details
+    #
+    # @option options [String] query The full text query to search for
+    # @option options [Integer] maxResults The number of activities, between 1 and 20, to return. Defaults to 10.
+    # @option options [String] pageToken The page of activities to fetch. Pass the value of :nextPageToken from the previous result set to get the next page of results.
+    # @option options [String] orderBy Specifies how to order search results. Acceptable values are "best" and "recent". Defaults to "recent".
+    # @return [Hash] A nested hash representation of a {http://developers.google.com/+/api/latest/activities/search#response search result for activities}.
+    def search_activities(options = {})
+      get("activities", options)
+    end
   end
 end
