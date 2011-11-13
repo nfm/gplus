@@ -1,4 +1,5 @@
 require 'gplus/activity'
+require 'gplus/comment'
 require 'gplus/person'
 
 module Gplus
