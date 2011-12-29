@@ -48,7 +48,7 @@ First, create an API client using your Client ID, Client Secret, and one of the 
 
 Generate an authorization URL, and use it in a view:
 
-    @auth_url = @gplus.authorization_url
+    @auth_url = @gplus.authorize_url
     => https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=YOUR_CLIENT_ID&redirect_uri= ...
 
     = link_to 'Authorize This App', @auth_url
