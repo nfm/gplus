@@ -42,11 +42,16 @@ module Gplus
     end
 
     # Generate an authorization URL where a user can authorize your application to access their Google+ data.
+    # @see http://code.google.com/apis/accounts/docs/OAuth2WebServer.html#formingtheurl The set of query string parameters supported by the Google Authorization Server for web server applications.
     #
-    # @param [String] redirect_uri An optional over-ride for the redirect_uri you initialized the API client with.
+    # @param [Hash] options Additional parameters used in the OAuth request.
+    # @option options [String] :redirect_uri An optional over-ride for the redirect_uri you initialized the API client with.
+    # @option options [String] :access_type ('online'). Indicates if your application needs to access a Google API when the user is not present at the browser. Allowed values are 'online' and 'offline'.
     # @return [String] A Google account authorization URL for your application.
-    def authorize_url(redirect_uri = @redirect_uri)
-      @oauth_client.auth_code.authorize_url(:redirect_uri => redirect_uri, :scope => 'https://www.googleapis.com/auth/plus.me')
+    def authorize_url(options = {})
+      defaults = { :scope => 'https://www.googleapis.com/auth/plus.me', :redirect_uri => @redirect_uri }
+      options = defaults.merge(options)
+      @oauth_client.auth_code.authorize_url(options)
     end
 
     # Authorize an API client instance to access the user's private data.
