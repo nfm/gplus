@@ -111,7 +111,7 @@ The person's profile will be returned as a nested hash:
 
 Search for public profiles with `.search_people`:
 
-    people = @gplus.search_people(:query => 'Larry Page')
+    people = @gplus.search_people('Larry Page')
 
 Matching profiles will be returned in a nested hash. The actual profiles are in the `:items` array:
 
@@ -122,14 +122,12 @@ Matching profiles will be returned in a nested hash. The actual profiles are in 
 By default, this will fetch 10 profiles. You can fetch between 1 and 20 by passing a `:maxResults` option:
 
     # Get 20 results
-    @gplus.search_people(:query => 'Larry Page', :maxResults => 20)
+    @gplus.search_people('Larry Page', :maxResults => 20)
 
 If you want more than 20 results, take the `:nextPageToken` returned from your first request, and pass it as a `:pageToken` option:
 
-    people = @gplus.search_people(:query => 'Larry Page', :maxResults => 20)
-    more_people = @gplus.search_people(:query => 'Larry Page', :maxResults => 20, :pageToken => people[:nextPageToken])
-
-Omitting the `:query` option will simply return all profiles.
+    people = @gplus.search_people('Larry Page', :maxResults => 20)
+    more_people = @gplus.search_people('Larry Page', :maxResults => 20, :pageToken => people[:nextPageToken])
 
 See the Google+ API documentation for [People](http://developers.google.com/+/api/latest/people), [People: get](http://developers.google.com/+/api/latest/people/get) and [People: search](http://developers.google.com/+/api/latest/people/search).
 
