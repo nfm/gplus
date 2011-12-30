@@ -68,6 +68,7 @@ module Gplus
           @access_token.refresh!
           @access_token_refreshed = true
         end
+        @access_token
       end
     end
 
