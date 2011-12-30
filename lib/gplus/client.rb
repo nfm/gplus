@@ -80,7 +80,7 @@ module Gplus
   private
     def get(path, params = {})
       if access_token
-        response = access_token.get("#{self.api_version}/#{path}", params)
+        response = access_token.get("#{self.api_version}/#{path}", :params => params)
       else
         response = @oauth_client.request(:get, "#{self.api_version}/#{path}", { :params => params.merge(:key => @api_key) })
       end
