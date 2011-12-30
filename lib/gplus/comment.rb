@@ -4,7 +4,7 @@ module Gplus
     # See https://developers.google.com/+/api/latest/comments/get for more details.
     #
     # @param [String] id The unique ID of the comment you want to retrieve.
-    # @returb [Hash] A nested hash representation of a {https://developers.google.com/+/api/latest/comments#resource Comment resource}.
+    # @return [Hash] A nested hash representation of a {https://developers.google.com/+/api/latest/comments#resource Comment resource}.
     def get_comment(id)
       get("comments/#{id}")
     end
