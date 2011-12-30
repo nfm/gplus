@@ -23,13 +23,13 @@ module Gplus
     # Search all public Google+ activities.
     # See https://developers.google.com/+/api/latest/activities/search for more details
     #
-    # @option options [String] query The full text query to search for. This option is required.
+    # @param [String] query The full text query to search for.
     # @option options [Integer] maxResults (10) The number of activities, between 1 and 20, to return.
     # @option options [String] pageToken The page of activities to fetch. Pass the value of :nextPageToken from the previous result set to get the next page of results.
     # @option options [String] orderBy ('recent') Specifies how to order search results. Acceptable values are 'best' and 'recent'.
     # @return [Hash] A nested hash representation of a {http://developers.google.com/+/api/latest/activities/search#response search result for activities}.
-    def search_activities(options = {})
-      get("activities", options)
+    def search_activities(query, options = {})
+      get("activities", options.merge(:query => query))
     end
   end
 end

@@ -165,7 +165,7 @@ If you want more than 100 results, take the `:nextPageToken` returned from your 
 
 Search for public activities with `.search_activities`:
 
-    activities = @gplus.search_activities(:query => 'Programming')
+    activities = @gplus.search_activities('Programming')
 
 Matching activities will be returned in a nested hash. The actual activities are in the `:items` array:
 
@@ -176,18 +176,16 @@ Matching activities will be returned in a nested hash. The actual activities are
 By default, this will fetch 10 activities. You can fetch between 1 and 20 by passing a `:maxResults` option:
 
     # Get 20 results
-    @gplus.search_activities(:query => 'Programming', :maxResults => 20)
+    @gplus.search_activities('Programming', :maxResults => 20)
 
 If you want more than 20 results, take the `:nextPageToken` returned from your first request, and pass it as a `:pageToken` option:
 
-    activities = @gplus.search_activities(:query => 'Programming', :maxResults => 20)
-    more_activities = @gplus.search_activities(:query => 'Programming', :maxResults => 20, :pageToken => activities[:nextPageToken])
-
-Omitting the `:query` option will simply return all activities.
+    activities = @gplus.search_activities('Programming', :maxResults => 20)
+    more_activities = @gplus.search_activities('Programming', :maxResults => 20, :pageToken => activities[:nextPageToken])
 
 You can specify an order for the activities that are returned by passing an `:orderBy` option. Acceptable values are "best" and "recent" (the default).
 
-    activities = @gplus.search_activities(:query => 'Programming', :orderBy => "best")
+    activities = @gplus.search_activities('Programming', :orderBy => "best")
 
 See the Google+ API documentation for [Activities](http://developers.google.com/+/api/latest/activities), [Activities: get](http://developers.google.com/+/api/latest/activities/get), [Activities: list](http://developers.google.com/+/api/latest/activities/list), and [Activities: search](http://developers.google.com/+/api/latest/activities/search).
 
