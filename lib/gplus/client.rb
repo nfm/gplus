@@ -45,7 +45,7 @@ module Gplus
     end
 
     # Generate an authorization URL where a user can authorize your application to access their Google+ data.
-    # @see http://code.google.com/apis/accounts/docs/OAuth2WebServer.html#formingtheurl The set of query string parameters supported by the Google Authorization Server for web server applications.
+    # @see https://code.google.com/apis/accounts/docs/OAuth2WebServer.html#formingtheurl The set of query string parameters supported by the Google Authorization Server for web server applications.
     #
     # @param [Hash] options Additional parameters used in the OAuth request.
     # @option options [String] :redirect_uri An optional over-ride for the redirect_uri you initialized the API client with.
