@@ -1,5 +1,7 @@
 module Gplus
-  class Client
+  # A collection of methods for Google+ Activities API calls.
+  # @see http://developers.google.com/+/api/latest/activities
+  module Activity
     # Get an Activity by its unique ID.
     # See http://developers.google.com/+/api/latest/activities/get for more details.
     #

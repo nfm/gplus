@@ -1,6 +1,10 @@
 module Gplus
   # The main Gplus class, containing methods for initializing a Google+ client and requesting authorization
   class Client
+    include Activity
+    include Comment
+    include Person
+
     # The default Google+ API endpoint that all requests are sent to.
     DEFAULT_ENDPOINT = 'https://www.googleapis.com/plus'
     # The default version of the Google+ API to send requests to.

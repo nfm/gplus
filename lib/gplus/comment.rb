@@ -1,5 +1,7 @@
 module Gplus
-  class Client
+  # A collection of methods for Google+ Comments API calls.
+  # @see http://developers.google.com/+/api/latest/comments
+  module Comment
     # Get a Comment by its unique ID.
     # See https://developers.google.com/+/api/latest/comments/get for more details.
     #

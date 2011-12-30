@@ -1,5 +1,7 @@
 module Gplus
-  class Client
+  # A collection of methods for Google+ People API calls.
+  # @see http://developers.google.com/+/api/latest/people
+  module Person
     # Get a person's Google+ profile.
     # See http://developers.google.com/+/api/latest/people/get for more details.
     #

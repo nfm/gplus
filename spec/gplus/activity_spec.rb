@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Gplus::Client do
+describe Gplus::Activity do
   before do
     @api_key = '1234567'
     @client = Gplus::Client.new(:api_key => @api_key)
