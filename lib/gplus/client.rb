@@ -1,7 +1,3 @@
-require 'gplus/activity'
-require 'gplus/comment'
-require 'gplus/person'
-
 module Gplus
   class Client
     DEFAULT_ENDPOINT = 'https://www.googleapis.com/plus'
