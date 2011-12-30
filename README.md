@@ -46,9 +46,9 @@ First, create an API client using your Client ID, Client Secret, and one of the 
       :redirect_uri => 'http://example.com/oauth/callback'
     )
 
-Generate an authorization URL, and use it in a view:
+Generate an authorization URL, and use it in a view. You may want to request offline access:
 
-    @auth_url = @gplus.authorize_url
+    @auth_url = @gplus.authorize_url(:access_type => 'offline')
     => https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=YOUR_CLIENT_ID&redirect_uri= ...
 
     = link_to 'Authorize This App', @auth_url
@@ -80,6 +80,8 @@ Now you can create an authorized client instance using the stored OAuth token:
 ## Refreshing OAuth tokens
 
 Google+ OAuth tokens are currently only valid for 3600 seconds (one hour). You can use the `:refresh_token` to get a new OAuth token after your existing token expires, without requiring the user to re-authorize your application.
+
+*Note* that you will only receive a `refresh_token` if you request `:access_type => 'offline'` when you generate your `authorize_url`.
 
 Gplus will automatically request a new token if the provided token has expired. You should check to see if this has occured so that you can store the new token. Otherwise, after the initial token expires, you'll be requesting a new token from Google each time you initialize an API client. This is slow!
 
