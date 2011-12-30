@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.0.1: 2011/12/30
+
+* Fix bug in `#access_token` where `@access_token` was not being returned correctly
+* Fix incorrect method name in README
+
 ## v1.0.0: 2011/11/13
 
 * Add support for searching for People and Activities
