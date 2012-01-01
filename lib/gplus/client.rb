@@ -67,6 +67,19 @@ module Gplus
       @access_token = @oauth_client.auth_code.get_token(auth_code, params, opts)
     end
 
+    # Authorize a Gplus::Client instance to access the user's private data, after initialization
+    #
+    # @param [String] :token The OAuth token to authorize the API client for authenticated requests (for non-public data).
+    # @param [String] :refresh_token The OAuth refresh_token, to request a new token if the provided token has expired.
+    # @param [Integer] :token_expires_at The time that the OAuth token expires at in seconds since the epoch.
+    # @return An OAuth2::AccessToken
+    def authorize(token, refresh_token, token_expires_at)
+      @token = token
+      @refresh_token = refresh_token
+      @token_expires_at = token_expires_at
+      access_token
+    end
+
     # Retrieve or create an OAuth2::AccessToken, using the :token and :refresh_token specified when the API client instance was initialized
     #
     # @return An OAuth2::AccessToken
