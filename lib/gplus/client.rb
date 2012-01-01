@@ -87,7 +87,7 @@ module Gplus
       if @token
         @access_token ||= OAuth2::AccessToken.new(@oauth_client, @token, :refresh_token => @refresh_token, :expires_at => @token_expires_at)
         if @access_token.expired?
-          @access_token.refresh!
+          @access_token = @access_token.refresh!
           @access_token_refreshed = true
         end
         @access_token
