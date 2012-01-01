@@ -57,7 +57,7 @@ After the user authorizes your app, they will be redirected to your `redirect_ur
 
     class OauthController < ApplicationController
       def callback
-        access_token = @gplus.authorize(params[:code])
+        access_token = @gplus.get_token(params[:code])
         current_user.update_attributes(
           :token => access_token.token,
           :refresh_token => access_token.refresh_token,
@@ -76,6 +76,10 @@ Now you can create an authorized client instance using the stored OAuth token:
       :client_secret => 'YOUR_CLIENT_SECRET',
       :redirect_uri => 'http://example.com/oauth/callback'
     )
+
+Alternatively, you can authorize an existing client instance (after you initialize it) by calling `authorize` and passing in the stored `token`, `refresh_token` and `token_expires_at`:
+
+    @gplus.authorize(current_user.token, current_user.refresh_token, current_user.token_expires_at)
 
 ## Refreshing OAuth tokens
 

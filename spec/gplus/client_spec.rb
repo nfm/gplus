@@ -13,6 +13,10 @@ describe Gplus::Client do
     pending
   end
 
+  describe '.get_token' do
+    pending
+  end
+
   describe '.access_token' do
     pending
   end
