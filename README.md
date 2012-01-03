@@ -11,10 +11,15 @@ It currently has full support for the People, Activities and Comments APIs, usin
 * [Documentation](http://rubydoc.info/github/nfm/gplus/master/frames)
 * [Issues](https://github.com/nfm/gplus/issues)
 * [Changelog](https://github.com/nfm/gplus/blob/master/CHANGELOG.md)
+* [Example Rails 3.1 app](https://github.com/nfm/gplus-rails-demo)
 
 ## Installation
 
 Add `gplus` to your Gemfile, then run `bundle install`.
+
+## Example Rails application
+
+Take a look at the [example Rails 3.1 application](https://github.com/nfm/gplus-rails-demo) to see gplus in action. You can either browse the repository to see how I'm using it, or clone it and follow the instructions in that repositories README to test it.
 
 ## Creating and configuring your application
 
