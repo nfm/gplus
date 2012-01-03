@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Gplus::Client do
+describe Gplus::Person do
   before do
     @api_key = '1234567'
     @client = Gplus::Client.new(:api_key => @api_key)
@@ -20,28 +20,23 @@ describe Gplus::Client do
       @people, @people_json = fixture('people.json')
     end
 
-    it "should list all public profiles" do
-      stub_api_request(:get, "people").to_return(:body => @people)
-      @client.search_people.should == @people_json
-    end
-
-    it "should accept a :query argument" do
+    it "should require a :query parameter" do
       stub_api_request(:get, "people", :query => @person_json['displayName']).to_return(:body => @person)
-      @client.search_people(:query => @person_json['displayName']).should == @person_json
+      @client.search_people(@person_json['displayName']).should == @person_json
     end
 
-    it "should accept a :maxResults argument" do
+    it "should accept a :maxResults option" do
       @results = 2
 
-      stub_api_request(:get, "people", :maxResults => @results.to_s).to_return(:body => @people)
-      @client.search_people(:maxResults => @results).should == @people_json
+      stub_api_request(:get, "people", :query => @person_json['displayName'], :maxResults => @results.to_s).to_return(:body => @people)
+      @client.search_people(@person_json['displayName'], :maxResults => @results).should == @people_json
     end
 
-    it "should accept a :pageToken argument" do
+    it "should accept a :pageToken option" do
       @page = '1234567'
 
-      stub_api_request(:get, "people", :pageToken => @page).to_return(:body => @people)
-      @client.search_people(:pageToken => @page).should == @people_json
+      stub_api_request(:get, "people", :query => @person_json['displayName'], :pageToken => @page).to_return(:body => @people)
+      @client.search_people(@person_json['displayName'], :pageToken => @page).should == @people_json
     end
   end
 end

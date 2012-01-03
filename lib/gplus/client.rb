@@ -1,10 +1,13 @@
-require 'gplus/activity'
-require 'gplus/comment'
-require 'gplus/person'
-
 module Gplus
+  # The main Gplus class, containing methods for initializing a Google+ client and requesting authorization
   class Client
+    include Activity
+    include Comment
+    include Person
+
+    # The default Google+ API endpoint that all requests are sent to.
     DEFAULT_ENDPOINT = 'https://www.googleapis.com/plus'
+    # The default version of the Google+ API to send requests to.
     DEFAULT_API_VERSION = 'v1'
 
     attr_accessor :endpoint, :api_version
@@ -42,20 +45,39 @@ module Gplus
     end
 
     # Generate an authorization URL where a user can authorize your application to access their Google+ data.
+    # @see https://code.google.com/apis/accounts/docs/OAuth2WebServer.html#formingtheurl The set of query string parameters supported by the Google Authorization Server for web server applications.
     #
-    # @param [String] redirect_uri An optional over-ride for the redirect_uri you initialized the API client with.
+    # @param [Hash] options Additional parameters used in the OAuth request.
+    # @option options [String] :redirect_uri An optional over-ride for the redirect_uri you initialized the API client with.
+    # @option options [String] :access_type ('online'). Indicates if your application needs to access a Google API when the user is not present at the browser. Allowed values are 'online' and 'offline'.
     # @return [String] A Google account authorization URL for your application.
-    def authorize_url(redirect_uri = @redirect_uri)
-      @oauth_client.auth_code.authorize_url(:redirect_uri => redirect_uri, :scope => 'https://www.googleapis.com/auth/plus.me')
+    def authorize_url(options = {})
+      defaults = { :scope => 'https://www.googleapis.com/auth/plus.me', :redirect_uri => @redirect_uri }
+      options = defaults.merge(options)
+      @oauth_client.auth_code.authorize_url(options)
     end
 
-    # Authorize an API client instance to access the user's private data.
+    # Retrieve an OAuth access token using the short-lived authentication code given to you after a user authorizes your application.
     #
     # @param [String] auth_code The code returned to your redirect_uri after the user authorized your application to access their Google+ data.
-    # @param [String] redirect_uri An optional over-ride for the redirect_uri you initialized the API client with.
-    # @return [OAuth2::AccessToken] An OAuth access token. Store access_token[:token] and access_token[:refresh_token] to get persistent access to the user's data until access_token[:expires_at].
-    def authorize(auth_code, redirect_uri = @redirect_uri)
-      @access_token = @oauth_client.auth_code.get_token(auth_code, :redirect_uri => redirect_uri)
+    # @param [Hash] params Additional parameters for the token endpoint (passed through to OAuth2::Client#get_token)
+    # @param [Hash] opts Additional access token options (passed through to OAuth2::Client#get_token)
+    # @return [OAuth2::AccessToken] An OAuth access token. Store access_token[:token], access_token[:refresh_token] and access_token[:expires_at] to get persistent access to the user's data until access_token[:expires_at].
+    def get_token(auth_code, params = {}, opts = {})
+      @access_token = @oauth_client.auth_code.get_token(auth_code, params, opts)
+    end
+
+    # Authorize a Gplus::Client instance to access the user's private data, after initialization
+    #
+    # @param [String] :token The OAuth token to authorize the API client for authenticated requests (for non-public data).
+    # @param [String] :refresh_token The OAuth refresh_token, to request a new token if the provided token has expired.
+    # @param [Integer] :token_expires_at The time that the OAuth token expires at in seconds since the epoch.
+    # @return An OAuth2::AccessToken
+    def authorize(token, refresh_token, token_expires_at)
+      @token = token
+      @refresh_token = refresh_token
+      @token_expires_at = token_expires_at
+      access_token
     end
 
     # Retrieve or create an OAuth2::AccessToken, using the :token and :refresh_token specified when the API client instance was initialized
@@ -65,7 +87,7 @@ module Gplus
       if @token
         @access_token ||= OAuth2::AccessToken.new(@oauth_client, @token, :refresh_token => @refresh_token, :expires_at => @token_expires_at)
         if @access_token.expired?
-          @access_token.refresh!
+          @access_token = @access_token.refresh!
           @access_token_refreshed = true
         end
         @access_token
@@ -80,7 +102,7 @@ module Gplus
   private
     def get(path, params = {})
       if access_token
-        response = access_token.get("#{self.api_version}/#{path}", params)
+        response = access_token.get("#{self.api_version}/#{path}", :params => params)
       else
         response = @oauth_client.request(:get, "#{self.api_version}/#{path}", { :params => params.merge(:key => @api_key) })
       end

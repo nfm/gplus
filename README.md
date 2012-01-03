@@ -11,10 +11,15 @@ It currently has full support for the People, Activities and Comments APIs, usin
 * [Documentation](http://rubydoc.info/github/nfm/gplus/master/frames)
 * [Issues](https://github.com/nfm/gplus/issues)
 * [Changelog](https://github.com/nfm/gplus/blob/master/CHANGELOG.md)
+* [Example Rails 3.1 app](https://github.com/nfm/gplus-rails-demo)
 
 ## Installation
 
 Add `gplus` to your Gemfile, then run `bundle install`.
+
+## Example Rails application
+
+Take a look at the [example Rails 3.1 application](https://github.com/nfm/gplus-rails-demo) to see gplus in action. You can either browse the repository to see how I'm using it, or clone it and follow the instructions in that repositories README to test it.
 
 ## Creating and configuring your application
 
@@ -46,9 +51,9 @@ First, create an API client using your Client ID, Client Secret, and one of the 
       :redirect_uri => 'http://example.com/oauth/callback'
     )
 
-Generate an authorization URL, and use it in a view:
+Generate an authorization URL, and use it in a view. You may want to request offline access:
 
-    @auth_url = @gplus.authorize_url
+    @auth_url = @gplus.authorize_url(:access_type => 'offline')
     => https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=YOUR_CLIENT_ID&redirect_uri= ...
 
     = link_to 'Authorize This App', @auth_url
@@ -57,7 +62,7 @@ After the user authorizes your app, they will be redirected to your `redirect_ur
 
     class OauthController < ApplicationController
       def callback
-        access_token = @gplus.authorize(params[:code])
+        access_token = @gplus.get_token(params[:code])
         current_user.update_attributes(
           :token => access_token.token,
           :refresh_token => access_token.refresh_token,
@@ -77,9 +82,15 @@ Now you can create an authorized client instance using the stored OAuth token:
       :redirect_uri => 'http://example.com/oauth/callback'
     )
 
+Alternatively, you can authorize an existing client instance (after you initialize it) by calling `authorize` and passing in the stored `token`, `refresh_token` and `token_expires_at`:
+
+    @gplus.authorize(current_user.token, current_user.refresh_token, current_user.token_expires_at)
+
 ## Refreshing OAuth tokens
 
 Google+ OAuth tokens are currently only valid for 3600 seconds (one hour). You can use the `:refresh_token` to get a new OAuth token after your existing token expires, without requiring the user to re-authorize your application.
+
+*Note* that you will only receive a `refresh_token` if you request `:access_type => 'offline'` when you generate your `authorize_url`.
 
 Gplus will automatically request a new token if the provided token has expired. You should check to see if this has occured so that you can store the new token. Otherwise, after the initial token expires, you'll be requesting a new token from Google each time you initialize an API client. This is slow!
 
@@ -111,7 +122,7 @@ The person's profile will be returned as a nested hash:
 
 Search for public profiles with `.search_people`:
 
-    people = @gplus.search_people(:query => 'Larry Page')
+    people = @gplus.search_people('Larry Page')
 
 Matching profiles will be returned in a nested hash. The actual profiles are in the `:items` array:
 
@@ -122,14 +133,12 @@ Matching profiles will be returned in a nested hash. The actual profiles are in 
 By default, this will fetch 10 profiles. You can fetch between 1 and 20 by passing a `:maxResults` option:
 
     # Get 20 results
-    @gplus.search_people(:query => 'Larry Page', :maxResults => 20)
+    @gplus.search_people('Larry Page', :maxResults => 20)
 
 If you want more than 20 results, take the `:nextPageToken` returned from your first request, and pass it as a `:pageToken` option:
 
-    people = @gplus.search_people(:query => 'Larry Page', :maxResults => 20)
-    more_people = @gplus.search_people(:query => 'Larry Page', :maxResults => 20, :pageToken => people[:nextPageToken])
-
-Omitting the `:query` option will simply return all profiles.
+    people = @gplus.search_people('Larry Page', :maxResults => 20)
+    more_people = @gplus.search_people('Larry Page', :maxResults => 20, :pageToken => people[:nextPageToken])
 
 See the Google+ API documentation for [People](http://developers.google.com/+/api/latest/people), [People: get](http://developers.google.com/+/api/latest/people/get) and [People: search](http://developers.google.com/+/api/latest/people/search).
 
@@ -167,7 +176,7 @@ If you want more than 100 results, take the `:nextPageToken` returned from your 
 
 Search for public activities with `.search_activities`:
 
-    activities = @gplus.search_activities(:query => 'Programming')
+    activities = @gplus.search_activities('Programming')
 
 Matching activities will be returned in a nested hash. The actual activities are in the `:items` array:
 
@@ -178,18 +187,16 @@ Matching activities will be returned in a nested hash. The actual activities are
 By default, this will fetch 10 activities. You can fetch between 1 and 20 by passing a `:maxResults` option:
 
     # Get 20 results
-    @gplus.search_activities(:query => 'Programming', :maxResults => 20)
+    @gplus.search_activities('Programming', :maxResults => 20)
 
 If you want more than 20 results, take the `:nextPageToken` returned from your first request, and pass it as a `:pageToken` option:
 
-    activities = @gplus.search_activities(:query => 'Programming', :maxResults => 20)
-    more_activities = @gplus.search_activities(:query => 'Programming', :maxResults => 20, :pageToken => activities[:nextPageToken])
-
-Omitting the `:query` option will simply return all activities.
+    activities = @gplus.search_activities('Programming', :maxResults => 20)
+    more_activities = @gplus.search_activities('Programming', :maxResults => 20, :pageToken => activities[:nextPageToken])
 
 You can specify an order for the activities that are returned by passing an `:orderBy` option. Acceptable values are "best" and "recent" (the default).
 
-    activities = @gplus.search_activities(:query => 'Programming', :orderBy => "best")
+    activities = @gplus.search_activities('Programming', :orderBy => "best")
 
 See the Google+ API documentation for [Activities](http://developers.google.com/+/api/latest/activities), [Activities: get](http://developers.google.com/+/api/latest/activities/get), [Activities: list](http://developers.google.com/+/api/latest/activities/list), and [Activities: search](http://developers.google.com/+/api/latest/activities/search).
 
