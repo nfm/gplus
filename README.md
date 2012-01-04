@@ -58,6 +58,8 @@ Generate an authorization URL, and use it in a view. You may want to request off
 
     = link_to 'Authorize This App', @auth_url
 
+You can specify a different `redirect_uri` to the one you initialized your `Gplus::Client` with. If you do so, you must call `get_token` with the same `redirect_uri` value.
+
 After the user authorizes your app, they will be redirected to your `redirect_uri`. Use `params[:code]` to retrieve an OAuth token for the user, and store the `token`, `refresh_token` and `expires_at` for persistence:
 
     class OauthController < ApplicationController
