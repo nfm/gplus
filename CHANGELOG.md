@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.0.1: 2012/01/11
+
+* Fix file permissions so that gplus's files are world readable
+
 ## v2.0.0: 2012/01/03
 
 ### Breaking API changes
