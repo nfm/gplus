@@ -48,7 +48,7 @@ module Gplus
     # @see https://code.google.com/apis/accounts/docs/OAuth2WebServer.html#formingtheurl The set of query string parameters supported by the Google Authorization Server for web server applications.
     #
     # @param [Hash] options Additional parameters used in the OAuth request.
-    # @option options [String] :redirect_uri An optional over-ride for the redirect_uri you initialized the API client with.
+    # @option options [String] :redirect_uri An optional over-ride for the redirect_uri you initialized the API client with. This must match the redirect_uri you use when you call #get_token.
     # @option options [String] :access_type ('online'). Indicates if your application needs to access a Google API when the user is not present at the browser. Allowed values are 'online' and 'offline'.
     # @return [String] A Google account authorization URL for your application.
     def authorize_url(options = {})
@@ -58,6 +58,7 @@ module Gplus
     end
 
     # Retrieve an OAuth access token using the short-lived authentication code given to you after a user authorizes your application.
+    # Note that if you specified an over-ride redirect_uri when you called #authorize_url, you must use the same redirect_uri when calling #get_token.
     #
     # @param [String] auth_code The code returned to your redirect_uri after the user authorized your application to access their Google+ data.
     # @param [Hash] params Additional parameters for the token endpoint (passed through to OAuth2::Client#get_token)
