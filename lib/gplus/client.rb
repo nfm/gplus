@@ -65,6 +65,8 @@ module Gplus
     # @param [Hash] opts Additional access token options (passed through to OAuth2::Client#get_token)
     # @return [OAuth2::AccessToken] An OAuth access token. Store access_token[:token], access_token[:refresh_token] and access_token[:expires_at] to get persistent access to the user's data until access_token[:expires_at].
     def get_token(auth_code, params = {}, opts = {})
+      defaults = { :redirect_uri => @redirect_uri }
+      params = defaults.merge(params)
       @access_token = @oauth_client.auth_code.get_token(auth_code, params, opts)
     end
 
