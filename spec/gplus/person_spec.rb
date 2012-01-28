@@ -39,4 +39,35 @@ describe Gplus::Person do
       @client.search_people(@person_json['displayName'], :pageToken => @page).should == @people_json
     end
   end
+
+  describe '.list_people_by_activity' do
+    before do
+      @activity, @activity_json = fixture('activity.json')
+      @people, @people_json = fixture('people.json')
+    end
+
+    it "should return a list of people who reshared an activity" do
+      stub_api_request(:get, "activities/#{@activity_json['id']}/people/resharers").to_return(:body => @people)
+      @client.list_people_by_activity(@activity_json['id'], 'resharers').should == @people_json
+    end
+
+    it "should return a list of people who plusoned an activity" do
+      stub_api_request(:get, "activities/#{@activity_json['id']}/people/plusoners").to_return(:body => @people)
+      @client.list_people_by_activity(@activity_json['id'], 'plusoners').should == @people_json
+    end
+
+    it "should accept a :maxResults argument" do
+      @results = 2
+
+      stub_api_request(:get, "activities/#{@activity_json['id']}/people/plusoners", :maxResults => @results.to_s).to_return(:body => @people)
+      @client.list_people_by_activity(@activity_json['id'], 'plusoners', :maxResults => @results).should == @people_json
+    end
+
+    it "should accept a :pageToken argument" do
+      @page = '1234567'
+
+      stub_api_request(:get, "activities/#{@activity_json['id']}/people/plusoners", :pageToken => @page).to_return(:body => @people)
+      @client.list_people_by_activity(@activity_json['id'], 'plusoners', :pageToken => @page).should == @people_json
+    end
+  end
 end
