@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.1.0: 2012/01/28
+
+* Add support for listPeopleByActivity API call
+* Use the `redirect_uri` that Gplus was initialized with as the default in `#get_token`. You now only have to specify an explicit `redirect_uri` when calling `#get_token` if you overrode your default `redirect_uri` when you called `#authorize_url`.
+
 ## v2.0.1: 2012/01/11
 
 * Fix file permissions so that gplus's files are world readable
