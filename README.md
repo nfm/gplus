@@ -142,7 +142,15 @@ If you want more than 20 results, take the `:nextPageToken` returned from your f
     people = @gplus.search_people('Larry Page', :maxResults => 20)
     more_people = @gplus.search_people('Larry Page', :maxResults => 20, :pageToken => people[:nextPageToken])
 
-See the Google+ API documentation for [People](http://developers.google.com/+/api/latest/people), [People: get](http://developers.google.com/+/api/latest/people/get) and [People: search](http://developers.google.com/+/api/latest/people/search).
+List people who +1'd or reshared an activity with `.list_people_by_activity`:
+
+    # Get people who +1'd an activity
+    people = @gplus.list_people_by_activity(activity_id, 'plusoners')
+
+    # Get people who reshared an activity
+    people = @gplus.list_people_by_activity(activity_id, 'resharers')
+
+See the Google+ API documentation for [People](http://developers.google.com/+/api/latest/people), [People: get](http://developers.google.com/+/api/latest/people/get), [People: search](http://developers.google.com/+/api/latest/people/search), and [People: listByActivity](https://developers.google.com/+/api/latest/people/listByActivity).
 
 ## [Activities](http://developers.google.com/+/api/latest/activities)
 

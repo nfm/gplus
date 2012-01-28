@@ -12,6 +12,6 @@ def fixture(file)
 end
 
 def stub_api_request(method, path, query = {})
-  query[:key] = @api_key unless @api_key.blank?
+  query[:key] = @api_key unless @api_key == nil or @api_key == ''
   stub_request(method, "#{Gplus::Client::DEFAULT_ENDPOINT}/#{Gplus::Client::DEFAULT_API_VERSION}/#{path}").with(:query => query)
 end
